@@ -94,7 +94,20 @@ def get_status(id):
         traceback.print_exc()
         return render_template('404.html')
 
+@app.route('/workflow_name/<name>', methods=['GET'])
+@nocache
+def get_status_by_name(name):
+    try:
+        workflow = get_db_workflows_by_name(name).get_workflow()
 
+        if workflow:
+            return render_template('workflow.html', workflow=workflow)
+        else:
+            return render_template('404.html')
+
+    except:
+        traceback.print_exc()
+        return render_template('404.html')
 @app.route('/workflow/<wf_id>/job/<job_id>', methods=['GET'])
 def get_job_status(wf_id, job_id):
     return render_template('job.html', job=get_job(wf_id, job_id))
@@ -103,7 +116,8 @@ def get_job_status(wf_id, job_id):
 @app.route('/create_workflow', methods=['GET'])
 def create_workflow():
     try:
-        w = Workflows(str(uuid.uuid4()), "Running")
+        id = request.args.get("id")
+        w = Workflows(str(id), "Running")
         db_session.add(w)
         db_session.commit()
 

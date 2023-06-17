@@ -6,6 +6,8 @@ import json
 def get_db_workflows():
     return Workflows.query.all()
 
+def get_db_workflows_by_name(workflow_name):
+    return Workflows.query.filter(Workflows.name == workflow_name).first()
 
 def get_db_workflows_by_id(workflow_id):
     return Workflows.query.filter(Workflows.id == workflow_id).first()

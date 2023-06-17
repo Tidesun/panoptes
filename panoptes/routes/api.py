@@ -1,5 +1,5 @@
 from flask import jsonify, request, Response
-from panoptes.server_utilities.db_queries import get_db_workflows_by_id, get_db_workflows, get_db_jobs, get_db_job_by_id, delete_db_wf, get_db_workflows_by_status, delete_whole_db, get_db_table_is_empty, rename_db_wf, rename_db_job
+from panoptes.server_utilities.db_queries import get_db_workflows_by_name,get_db_workflows_by_id, get_db_workflows, get_db_jobs, get_db_job_by_id, delete_db_wf, get_db_workflows_by_status, delete_whole_db, get_db_table_is_empty, rename_db_wf, rename_db_job
 from . import routes
 
 '''
@@ -32,7 +32,14 @@ def get_workflow_by_id(workflow_id):
         response = Response(status=404)
         return response
 
-
+@routes.route('/api/workflow_name/<workflow_name>', methods=['GET'])
+def get_workflow_by_name(workflow_name):
+    workflows = get_db_workflows_by_name(workflow_name)
+    if workflows:
+        return jsonify({'workflow': workflows.get_workflow()}), 200
+    else:
+        response = Response(status=404)
+        return response
 @routes.route('/api/workflow/<workflow_id>/jobs', methods=['GET'])
 def get_jobs_of_workflow(workflow_id):
     workflows = get_db_workflows_by_id(workflow_id)
