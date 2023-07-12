@@ -1,0 +1,9 @@
+
+Command 'pythonw' not found, did you mean:
+
+  command 'python0' from snap python0 (0.9.1)
+  command 'python3' from deb python3 (3.8.2-0ubuntu2)
+  command 'python2' from deb python2 (2.7.17-2ubuntu4)
+
+See 'snap info <snapname>' for additional versions.
+

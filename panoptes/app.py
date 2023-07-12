@@ -7,6 +7,7 @@ from functools import wraps, update_wrapper
 from datetime import datetime
 from flask import make_response
 
+from flask_cors import CORS, cross_origin
 from panoptes.database import init_db, db_session
 from panoptes.models import Workflows
 from panoptes.routes import *
@@ -18,6 +19,9 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.register_blueprint(routes)
 app.jinja_env.globals.update(get_jobs=get_jobs)
 app.jinja_env.globals.update(get_job=get_job)
+
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 init_db()
 
@@ -179,5 +183,5 @@ def handle_bad_request(e):
     return render_template('404.html')
 
 
-if __name__ == '__main__':
-    app.run()
+#if __name__ == '__main__':
+#    app.run()

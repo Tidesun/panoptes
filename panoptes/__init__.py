@@ -1,1 +1,1 @@
-from .panoptes import main
+

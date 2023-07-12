@@ -1,5 +1,6 @@
 from flask import jsonify, request, Response
 from panoptes.server_utilities.db_queries import get_db_workflows_by_name,get_db_workflows_by_id, get_db_workflows, get_db_jobs, get_db_job_by_id, delete_db_wf, get_db_workflows_by_status, delete_whole_db, get_db_table_is_empty, rename_db_wf, rename_db_job
+from flask_cors import cross_origin
 from . import routes
 
 '''
@@ -10,19 +11,19 @@ from . import routes
 /api/workflows/all
 '''
 
-
+@cross_origin()
 @routes.route('/api/service-info', methods=['GET'])
 def get_service_info():
     return jsonify({'status': "running"}), 200
 
-
+@cross_origin()
 @routes.route('/api/workflows', methods=['GET'])
 def get_workflows():
     workflows = [wf.get_workflow() for wf in get_db_workflows()]
     return jsonify({'workflows': workflows,
                     'count': len(workflows)}), 200
 
-
+@cross_origin()
 @routes.route('/api/workflow/<workflow_id>', methods=['GET'])
 def get_workflow_by_id(workflow_id):
     workflows = get_db_workflows_by_id(workflow_id)
@@ -31,7 +32,7 @@ def get_workflow_by_id(workflow_id):
     else:
         response = Response(status=404)
         return response
-
+@cross_origin()
 @routes.route('/api/workflow_name/<workflow_name>', methods=['GET'])
 def get_workflow_by_name(workflow_name):
     workflows = get_db_workflows_by_name(workflow_name)
@@ -40,6 +41,7 @@ def get_workflow_by_name(workflow_name):
     else:
         response = Response(status=404)
         return response
+@cross_origin()
 @routes.route('/api/workflow/<workflow_id>/jobs', methods=['GET'])
 def get_jobs_of_workflow(workflow_id):
     workflows = get_db_workflows_by_id(workflow_id)
@@ -59,7 +61,7 @@ def get_jobs(wf_id):
 def get_job(wf_id, job_id):
     return get_db_job_by_id(wf_id, job_id).get_job_json()
 
-
+@cross_origin()
 @routes.route('/api/workflow/<workflow_id>/job/<job_id>', methods=['GET'])
 def get_job_of_workflow(workflow_id, job_id):
     workflows = get_db_workflows_by_id(workflow_id)
@@ -74,7 +76,7 @@ def get_job_of_workflow(workflow_id, job_id):
         response = Response(status=404)
         return response
 
-
+@cross_origin()
 @routes.route('/api/workflow/<workflow_id>', methods=['PUT'])
 def rename_workflow_by_id(workflow_id):
     data = request.json
@@ -91,7 +93,7 @@ def rename_workflow_by_id(workflow_id):
         response = Response(status=404)
         return response
 
-
+@cross_origin()
 @routes.route('/api/workflow/<workflow_id>', methods=['DELETE'])
 def set_db_delete(workflow_id):
     if(get_db_workflows_by_id(workflow_id) is None):
@@ -108,7 +110,7 @@ def set_db_delete(workflow_id):
             return jsonify({'msg': 'The server is unable to store the '
                             'representation needed to complete the delete request.'}), 507
 
-
+@cross_origin()
 @routes.route('/api/workflows/all', methods=['DELETE'])
 def set_whole_db_delete():
     if get_db_table_is_empty('Workflows'):
